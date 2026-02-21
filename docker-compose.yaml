@@ -1,0 +1,35 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    container_name: authlab-web
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTH_LOG_PATH=/data/auth.log
+      - ALERTS_PATH=/output/sample_output.json
+    volumes:
+      - ./runtime/data:/data
+      - ./runtime/output:/output  
+    restart: unless-stopped
+
+  engine:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.engine
+    container_name: authlab-engine
+    environment:
+      - AUTH_LOG_PATH=/data/auth.log
+      - ALERTS_PATH=/output/sample_output.json
+      - REPORT_MD=/output/report.md
+      - REPORT_JSON=/output/report.json
+      - RUN_INTERVAL_SECONDS=10
+    volumes:
+      - ./runtime/data:/data
+      - ./runtime/output:/output
+      - ./app/templates:/app/templates:ro
+      - ./app/webapp.py:/app/webapp.py:ro
+    restart: unless-stopped
+    depends_on:
+      - web
