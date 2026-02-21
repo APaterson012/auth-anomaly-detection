@@ -16,3 +16,7 @@ runtime/output/
 
 # macOS/Linux junk
 .DS_Store
+
+# Runtime generated data (do not commit)
+runtime/data/
+runtime/output/
