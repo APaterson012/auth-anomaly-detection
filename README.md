@@ -32,3 +32,34 @@ Generated files (bind-mounted to host via `runtime/`):
 - `runtime/output/report.md` - human-readable report
 
 ## Architecture
+
+[Browser]
+|
+v
+[authlab-web] --writes--> runtime/data/auth.log
+|
+| (poll /api/alerts/count)
+v
+reads runtime/output/sample_output.json
+|
+v
+[authlab-engine] --reads--> runtime/data/auth.log
+--writes--> runtime/output/sample_output.json
+--writes--> runtime/output/report.md
+--writes--> runtime/output/report.json
+
+
+Two containers are used intentionally:
+- **web** handles UI + event generation
+- **engine** handles detection + reporting
+
+This mirrors real systems (app + worker/analytics pipeline).
+
+## Quick start
+
+### Requirements
+- Docker + Docker Compose
+
+### Run
+```bash
+docker compose up --build
